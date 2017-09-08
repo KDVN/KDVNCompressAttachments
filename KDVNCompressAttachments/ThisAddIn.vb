@@ -1,11 +1,10 @@
 ﻿Imports System.IO
 Imports SevenZip
 
-
-
 Public Class ThisAddIn
     Public Const strComproressFile As String = "Attachment.zip"
     Public Const strSubject As String = "Password for email "
+    Public Const strMessagePS As String = Chr(13) & "PS: Password open Attachment file, please check another Email"
 
     Private Sub ThisAddIn_Startup() Handles Me.Startup
 
@@ -55,24 +54,7 @@ Public Class ThisAddIn
     End Function
 
     Private Sub CreateZipFile(ByVal sourcePath As String, ByVal destFilename As String, ByVal zipPassword As String)
-        'Config 
-        ''Call to set DLL depending on processor type''
-        Try
-            SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files\7-Zip\7z.dll")
-        Catch
-            Try
-                If Environment.Is64BitProcess Then
-                    SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files (x86)\7-Zip\7z.dll")
-                Else
-                    MsgBox("Please install 7zip")
-                    Stop
-                End If
-            Catch
-                MsgBox("Please install 7zip")
-                Stop
-            End Try
-        End Try
-
+        'Config
         Dim SevenZipCompressor As New SevenZipCompressor()
         SevenZipCompressor.CompressionLevel = CompressionLevel.Normal
         SevenZipCompressor.CompressionMethod = CompressionMethod.Deflate
@@ -103,31 +85,56 @@ Public Class ThisAddIn
         End While
     End Sub
 
+    Private Sub KDVNWarning(strMessage As String, ByRef Cancel As Boolean)
+        Cancel = True
+        MsgBox(strMessage,, "KDVN Warning")
+    End Sub
+
     Private Sub Application_ItemSend(Item As Outlook.MailItem, ByRef Cancel As Boolean) Handles Application.ItemSend
         'Cancel = True
-        'CreateZipFile("")
-        On Error GoTo Fail
-        If Item.Attachments.Count > 0 Then
-            If MsgBox("Are you sure you want to compress this message?", vbYesNo + vbQuestion _
-                , "SEND CONFIRMATION") = vbYes Then
-                Dim tmpAttsDir = makeTempDir()
-                Dim ZipPassword = RandomString(10)
-                'Extract files to temp folder
-                moveAttach(Item, tmpAttsDir & "Old\")
-                CreateZipFile(tmpAttsDir & "Old", tmpAttsDir & "New\" & strComproressFile, ZipPassword)
-                Dim newMail As Outlook.MailItem
-                newMail = Item.Copy()
-                newMail.Subject = strSubject & newMail.Subject
-                newMail.Body = ZipPassword
-                newMail.Send()
-                Item.Attachments.Add(tmpAttsDir & "New\" & strComproressFile)
-                Item.Save()
-                ' MsgBox("Compress",, "KDVN Notification")
+        'Check 7Zip
+        ''Call to set DLL depending on processor type''
+        Try
+            SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files\7-Zip\7z.dll")
+        Catch
+            Try
+                If Environment.Is64BitOperatingSystem Then
+                    SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files (x86)\7-Zip\7z.dll")
+                Else
+                    KDVNWarning("Please Install 7zip", Cancel)
+                    Exit Sub
+                End If
+            Catch ex As Exception
+                KDVNWarning(ex.Message & Chr(13) & "Please Install 7zip", Cancel)
+                Exit Sub
+            End Try
+        End Try
+        Try
+            If Item.Attachments.Count > 0 Then
+                If MsgBox("Are you sure you want to compress this message?", vbYesNo + vbQuestion _
+                    , "SEND CONFIRMATION") = vbYes Then
+                    Dim tmpAttsDir = makeTempDir()
+                    Dim ZipPassword = RandomString(10)
+                    'Extract files to temp folder
+                    moveAttach(Item, tmpAttsDir & "Old\")
+                    CreateZipFile(tmpAttsDir & "Old", tmpAttsDir & "New\" & strComproressFile, ZipPassword)
+                    Dim newMail As Outlook.MailItem
+                    newMail = Item.Copy()
+                    newMail.Subject = strSubject & newMail.Subject
+                    newMail.Body = ZipPassword
+
+                    Item.Body = Item.Body & strMessagePS
+                    Item.Attachments.Add(tmpAttsDir & "New\" & strComproressFile)
+                    Item.Save()
+
+                    newMail.Send()
+
+                    DeleteDirectory(tmpAttsDir)
+                    ' MsgBox("Compress",, "KDVN Notification")
+                End If
             End If
-        End If
-        Exit Sub
-Fail:
-        MsgBox("Failed")
-        Cancel = True
+        Catch ex As Exception
+            KDVNWarning(ex.Message, Cancel)
+        End Try
     End Sub
 End Class
