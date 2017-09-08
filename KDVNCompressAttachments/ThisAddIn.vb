@@ -2,9 +2,16 @@
 Imports SevenZip
 
 Public Class ThisAddIn
-    Public Const strComproressFile As String = "Attachment.zip"
-    Public Const strSubject As String = "Password for email "
-    Public Const strMessagePS As String = Chr(13) & "PS: Password open Attachment file, please check another Email"
+    Public Const strComproressFile As String = "Attachment.zip",
+        strConfirmMessage As String = "- This email has attachment(s). Would you like to zip & secure with a random password?" &
+        Chr(13) &
+        "- If you choose YES, anther email with the password will be sent automatically !" & Chr(13) &
+        "- If you choose NO, Just send it"
+
+    Public Const strSubject As String = "Attachment Password for ! $CONTENT ! ",
+        strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of ! $CONTENT !"
+    Public Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
+
 
     Private Sub ThisAddIn_Startup() Handles Me.Startup
 
@@ -111,8 +118,8 @@ Public Class ThisAddIn
         End Try
         Try
             If Item.Attachments.Count > 0 Then
-                If MsgBox("Are you sure you want to compress this message?", vbYesNo + vbQuestion _
-                    , "SEND CONFIRMATION") = vbYes Then
+                If MsgBox(strConfirmMessage, vbYesNo + vbQuestion _
+                    , "KDVN SEND CONFIRMATION") = vbYes Then
                     Dim tmpAttsDir = makeTempDir()
                     Dim ZipPassword = RandomString(10)
                     'Extract files to temp folder
@@ -120,8 +127,12 @@ Public Class ThisAddIn
                     CreateZipFile(tmpAttsDir & "Old", tmpAttsDir & "New\" & strComproressFile, ZipPassword)
                     Dim newMail As Outlook.MailItem
                     newMail = Item.Copy()
-                    newMail.Subject = strSubject & newMail.Subject
-                    newMail.Body = ZipPassword
+                    Dim originalSubject = Item.Subject
+
+                    Dim newstrBodyEmailPassword = strBodyEmailPassword.Replace("$CONTENT", originalSubject)
+                    Dim newSubject = strSubject.Replace("$CONTENT", originalSubject)
+                    newMail.Subject = newSubject
+                    newMail.Body = newstrBodyEmailPassword & Chr(13) & ZipPassword
 
                     Item.Body = Item.Body & strMessagePS
                     Item.Attachments.Add(tmpAttsDir & "New\" & strComproressFile)

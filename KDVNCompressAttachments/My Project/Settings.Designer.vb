@@ -19,7 +19,7 @@ Option Explicit On
 Partial Friend NotInheritable Class MySettings
     Inherits Global.System.Configuration.ApplicationSettingsBase
     
-    Private Shared defaultInstance As MySettings = CType(Global.System.Configuration.ApplicationSettingsBase.Synchronized(New MySettings()), MySettings)
+    Private Shared defaultInstance As MySettings = CType(Global.System.Configuration.ApplicationSettingsBase.Synchronized(New MySettings()),MySettings)
     
 #Region "My.Settings Auto-Save Functionality"
 #If _MyType = "WindowsForms" Then
@@ -51,6 +51,19 @@ Partial Friend NotInheritable Class MySettings
 #End If
             Return defaultInstance
         End Get
+    End Property
+    
+    <Global.System.Configuration.UserScopedSettingAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Configuration.DefaultSettingValueAttribute("KDVN Outlook Addin:Compress Attachment files with password, Ramdom 10 character ("& _ 
+        "upcase)")>  _
+    Public Property Description() As String
+        Get
+            Return CType(Me("Description"),String)
+        End Get
+        Set
+            Me("Description") = value
+        End Set
     End Property
 End Class
 
