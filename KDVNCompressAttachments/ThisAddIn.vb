@@ -5,21 +5,13 @@ Public Class ThisAddIn
     Public Const strComproressFile As String = "Attachment.zip",
         strConfirmMessage As String = "- This email has attachment(s). Would you like to zip & secure with a random password?" &
         Chr(13) &
-        "- If you choose YES, anther email with the password will be sent automatically !" & Chr(13) &
+        "- If you choose YES, another email with the password will be sent automatically !" & Chr(13) &
         "- If you choose NO, Just send it"
 
-    Public Const strSubject As String = "Attachment Password for ! $CONTENT ! ",
-        strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of ! $CONTENT !"
+    Public Const strSubject As String = "Attachment Password for [$CONTENT] ",
+        strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of [$CONTENT] "
     Public Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
 
-
-    Private Sub ThisAddIn_Startup() Handles Me.Startup
-
-    End Sub
-
-    Private Sub ThisAddIn_Shutdown() Handles Me.Shutdown
-
-    End Sub
     'Delete a dir
     Private Sub DeleteDirectory(path As String)
         If Directory.Exists(path) Then
