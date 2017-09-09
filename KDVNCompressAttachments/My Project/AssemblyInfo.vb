@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Security
@@ -9,12 +10,12 @@ Imports System.Security
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("KDVNCompressAttachments")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("KDVNCompressAttachments")> 
-<Assembly: AssemblyCopyright("Copyright ©  2017")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("KDVNCompressAttachments")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("Kinden Vietnam")>
+<Assembly: AssemblyProduct("KDVNCompressAttachments")>
+<Assembly: AssemblyCopyright("Copyright ©  2017")>
+<Assembly: AssemblyTrademark("")>
 
 ' Setting ComVisible to false makes the types in this assembly not visible 
 ' to COM components.  If you need to access a type in this assembly from 
@@ -22,7 +23,7 @@ Imports System.Security
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("1e4d7741-a6fd-4396-bd9c-51b57a06b84e")> 
+<Assembly: Guid("1e4d7741-a6fd-4396-bd9c-51b57a06b84e")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -35,9 +36,9 @@ Imports System.Security
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
-
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: NeutralResourcesLanguage("en")>
 Friend Module DesignTimeConstants
     Public Const RibbonTypeSerializer As String = "Microsoft.VisualStudio.Tools.Office.Ribbon.Serialization.RibbonTypeCodeDomSerializer, Microsoft.VisualStudio.Tools.Office.Designer, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     Public Const RibbonBaseTypeSerializer As String = "System.ComponentModel.Design.Serialization.TypeCodeDomSerializer, System.Design"

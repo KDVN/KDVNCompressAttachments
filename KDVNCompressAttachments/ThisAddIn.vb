@@ -1,16 +1,19 @@
 ﻿Imports System.IO
-Imports SevenZip
+Imports System
+Imports ICSharpCode.SharpZipLib.Core
+Imports ICSharpCode.SharpZipLib.Zip
+
+'Imports SevenZip
 
 Public Class ThisAddIn
-    Public Const strComproressFile As String = "Attachment.zip",
-        strConfirmMessage As String = "- This email has attachment(s). Would you like to zip & secure with a random password?" &
+    Private Const strComproressFile As String = "Attachment.zip"
+    Private Const strConfirmMessage As String = "- This email has attachment(s). Would you like to zip & secure with a random password?" &
         Chr(13) &
         "- If you choose YES, another email with the password will be sent automatically !" & Chr(13) &
         "- If you choose NO, Just send it"
-
-    Public Const strSubject As String = "Attachment Password for [$CONTENT] ",
-        strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of [$CONTENT] "
-    Public Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
+    Private Const strSubject As String = "Attachment Password for [$CONTENT] "
+    Private Const strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of [$CONTENT] "
+    Private Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
 
     'Delete a dir
     Private Sub DeleteDirectory(path As String)
@@ -52,17 +55,79 @@ Public Class ThisAddIn
         Return sb.ToString()
     End Function
 
-    Private Sub CreateZipFile(ByVal sourcePath As String, ByVal destFilename As String, ByVal zipPassword As String)
-        'Config
-        Dim SevenZipCompressor As New SevenZipCompressor()
-        SevenZipCompressor.CompressionLevel = CompressionLevel.Normal
-        SevenZipCompressor.CompressionMethod = CompressionMethod.Deflate
-        SevenZipCompressor.ArchiveFormat = OutArchiveFormat.Zip
-        SevenZipCompressor.ZipEncryptionMethod = ZipEncryptionMethod.Aes256
+    ' Copy from https://github.com/icsharpcode/SharpZipLib/wiki/Zip-Samples
+    ' Compresses the files in the nominated folder, and creates a zip file on disk named as outPathname.
+    '
+    Public Sub CreateZipFile(folderName As String, outPathname As String, password As String)
 
+        Dim fsOut As FileStream = File.Create(outPathname)
+        Dim zipStream As New ZipOutputStream(fsOut)
 
-        SevenZipCompressor.CompressDirectory(sourcePath, destFilename, zipPassword)
+        zipStream.SetLevel(3)       '0-9, 9 being the highest level of compression
+        zipStream.Password = password   ' optional. Null is the same as not setting.
+
+        ' This setting will strip the leading part of the folder path in the entries, to
+        ' make the entries relative to the starting folder.
+        ' To include the full path for each entry up to the drive root, assign folderOffset = 0.
+        Dim folderOffset As Integer = folderName.Length + (If(folderName.EndsWith("\"), 0, 1))
+
+        CompressFolder(folderName, zipStream, folderOffset)
+
+        zipStream.IsStreamOwner = True
+        ' Makes the Close also Close the underlying stream
+        zipStream.Close()
     End Sub
+    ' Recurses down the folder structure
+    '
+    Private Sub CompressFolder(path As String, zipStream As ZipOutputStream, folderOffset As Integer)
+
+        Dim files As String() = Directory.GetFiles(path)
+
+        For Each filename As String In files
+
+            Dim fi As New FileInfo(filename)
+
+            Dim entryName As String = filename.Substring(folderOffset)  ' Makes the name in zip based on the folder
+            entryName = ZipEntry.CleanName(entryName)       ' Removes drive from name and fixes slash direction
+            Dim newEntry As New ZipEntry(entryName)
+            newEntry.DateTime = fi.LastWriteTime            ' Note the zip format stores 2 second granularity
+            newEntry.IsUnicodeText = True
+            ' Specifying the AESKeySize triggers AES encryption. Allowable values are 0 (off), 128 or 256.
+            '   newEntry.AESKeySize = 256;
+
+            ' To permit the zip to be unpacked by built-in extractor in WinXP and Server2003, WinZip 8, Java, and other older code,
+            ' you need to do one of the following: Specify UseZip64.Off, or set the Size.
+            ' If the file may be bigger than 4GB, or you do not need WinXP built-in compatibility, you do not need either,
+            ' but the zip will be in Zip64 format which not all utilities can understand.
+            '   zipStream.UseZip64 = UseZip64.Off;
+            newEntry.Size = fi.Length
+
+            zipStream.PutNextEntry(newEntry)
+
+            ' Zip the file in buffered chunks
+            ' the "using" will close the stream even if an exception occurs
+            Dim buffer As Byte() = New Byte(4095) {}
+            Using streamReader As FileStream = File.OpenRead(filename)
+                StreamUtils.Copy(streamReader, zipStream, buffer)
+            End Using
+            zipStream.CloseEntry()
+        Next
+        Dim folders As String() = Directory.GetDirectories(path)
+        For Each folder As String In folders
+            CompressFolder(folder, zipStream, folderOffset)
+        Next
+    End Sub
+    'Private Sub CreateZipFileTemp(ByVal sourcePath As String, ByVal destFilename As String, ByVal zipPassword As String)
+    '    'Config
+    '    Dim SevenZipCompressor As New SevenZipCompressor()
+    '    SevenZipCompressor.CompressionLevel = CompressionLevel.Normal
+    '    SevenZipCompressor.CompressionMethod = CompressionMethod.Deflate
+    '    SevenZipCompressor.ArchiveFormat = OutArchiveFormat.Zip
+    '    SevenZipCompressor.ZipEncryptionMethod = ZipEncryptionMethod.Aes256
+
+
+    '    SevenZipCompressor.CompressDirectory(sourcePath, destFilename, zipPassword)
+    'End Sub
 
     Private Sub moveAttach(ByRef Item As Outlook.MailItem, strPath As String)
         Dim sFile As String
@@ -94,21 +159,6 @@ Public Class ThisAddIn
         'Check 7Zip
         ''Call to set DLL depending on processor type''
         Try
-            SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files\7-Zip\7z.dll")
-        Catch
-            Try
-                If Environment.Is64BitOperatingSystem Then
-                    SevenZip.SevenZipCompressor.SetLibraryPath("C:\Program Files (x86)\7-Zip\7z.dll")
-                Else
-                    KDVNWarning("Please Install 7zip", Cancel)
-                    Exit Sub
-                End If
-            Catch ex As Exception
-                KDVNWarning(ex.Message & Chr(13) & "Please Install 7zip", Cancel)
-                Exit Sub
-            End Try
-        End Try
-        Try
             If Item.Attachments.Count > 0 Then
                 If MsgBox(strConfirmMessage, vbYesNo + vbQuestion _
                     , "KDVN SEND CONFIRMATION") = vbYes Then
@@ -138,6 +188,7 @@ Public Class ThisAddIn
             End If
         Catch ex As Exception
             KDVNWarning(ex.Message, Cancel)
+            Exit Sub
         End Try
     End Sub
 End Class
