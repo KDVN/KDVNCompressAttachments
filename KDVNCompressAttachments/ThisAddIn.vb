@@ -1,7 +1,10 @@
-﻿Imports System.IO
-Imports System
+﻿Imports System.Drawing
+Imports System.IO
+
 Imports ICSharpCode.SharpZipLib.Core
 Imports ICSharpCode.SharpZipLib.Zip
+Imports KDVNMyMsgBox
+
 
 'Imports SevenZip
 
@@ -160,8 +163,21 @@ Public Class ThisAddIn
         ''Call to set DLL depending on processor type''
         Try
             If Item.Attachments.Count > 0 Then
-                If MsgBox(strConfirmMessage, vbYesNo + vbQuestion _
-                    , "KDVN SEND CONFIRMATION") = vbYes Then
+
+                Dim kdvnFont As Font = New Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular)
+
+                'Dim result As DialogResult
+                'Cai nay
+                Dim waitTime As Integer = 5 'Second
+                Dim result = myMsgBox.Show(strConfirmMessage, kdvnFont,
+                                        "KDVN SEND CONFIRMATION",
+                                        myMsgBox.CustomButtons.Button3, "&Yes", "&NO, Just send it", "&Cancel",
+                                        myMsgBox.DefaultButton.Button2,
+                                        myMsgBox.Icon.Question, waitTime)
+                If result = 3 Then
+                    Cancel = True
+                    Exit Sub
+                ElseIf result = 1 Then
                     Dim tmpAttsDir = makeTempDir()
                     Dim ZipPassword = RandomString(10)
                     'Extract files to temp folder

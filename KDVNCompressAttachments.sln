@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "KDVNCompressAttachments", "KDVNCompressAttachments\KDVNCompressAttachments.vbproj", "{921121F4-E74A-496B-9246-98FD42EE449B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420} = {DC9B9076-84BF-4C93-B0BF-FF1FC279D420}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupKDVNCompressAttachment", "SetupKDVNCompressAttachment\SetupKDVNCompressAttachment.vdproj", "{5AF19572-37C2-408F-BDA6-58C4AE1F4C46}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "myMsgBox", "myMsgBox\myMsgBox.vbproj", "{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{5AF19572-37C2-408F-BDA6-58C4AE1F4C46}.Release|Any CPU.Build.0 = Release
 		{5AF19572-37C2-408F-BDA6-58C4AE1F4C46}.Release|x86.ActiveCfg = Release
 		{5AF19572-37C2-408F-BDA6-58C4AE1F4C46}.Release|x86.Build.0 = Release
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Debug|x86.Build.0 = Debug|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Release|x86.ActiveCfg = Release|Any CPU
+		{DC9B9076-84BF-4C93-B0BF-FF1FC279D420}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
