@@ -8,7 +8,7 @@ Imports System.Runtime.InteropServices
 
 ' Rivedere i valori degli attributi degli assembly
 
-<Assembly: AssemblyTitle("WindowsApplication1")>
+<Assembly: AssemblyTitle("KDVNMyMsgBox")>
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("WindowsApplication1")>

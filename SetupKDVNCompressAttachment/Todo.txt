@@ -1,0 +1,5 @@
+TODO: Make a bat file to install
+1. Uninstall
+2. Clean up folder install KDVN
+3. rundll32 dfshim CleanOnlineAppCache
+4. Reinstall
