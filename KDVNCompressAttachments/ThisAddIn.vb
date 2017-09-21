@@ -12,11 +12,11 @@ Public Class ThisAddIn
     Private Const strComproressFile As String = "Attachment.zip"
     Private Const strConfirmMessage As String = "This email containt attachment(s)! Would you like to ZIP & SERCURE those files with a random password?" &
         ControlChars.NewLine & ControlChars.NewLine &
-        "* If you choose YES, another email with the password will be sent automatically !" & ControlChars.NewLine &
-        "* If you choose NO, Just send it"
+        " * If you select YES: another email with the password will be sent automatically." & ControlChars.NewLine &
+        " * If you select NO: the email will be sent as is."
     Private Const strSubject As String = "Attachment(s) Password for [$CONTENT] "
     Private Const strBodyEmailPassword As String = "To whom it may concern, " & Chr(13) & Chr(13) &
-                                                    "Please use the following password to open the secured attachment(s) of the email having" &
+                                                    "Please use the following password to open the secured attachment(s) of the email having " &
                                                     "subject of [$CONTENT]" & Chr(13) & Chr(13) &
                                                     "[$PASSWORD]" & Chr(13) & Chr(13) &
                                                     "Please note that you have to use a zip program (such as 7-zip, Winzip, Winrar, etc) but" &
