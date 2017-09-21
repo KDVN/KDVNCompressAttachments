@@ -205,7 +205,7 @@ Public Class myMsgBox
             Button1 = New Button()
             Button1.Font = customFont
             Button1.Name = "Button1"
-            Button1.Size = New Size(95, 40)
+            Button1.Size = New Size(95, 35)
             Button1.TabIndex = 0
             Button1.Text = txt_OK
             Button1.UseVisualStyleBackColor = True
@@ -215,7 +215,7 @@ Public Class myMsgBox
 
             Button2 = New Button()
             Button2.Name = "Button2"
-            Button2.Size = New Size(95, 40)
+            Button2.Size = New Size(95, 35)
             Button2.TabIndex = 1
             Button2.Text = txt_Yes
             Button2.UseVisualStyleBackColor = True
@@ -225,7 +225,7 @@ Public Class myMsgBox
 
             Button3 = New Button()
             Button3.Name = "Button3"
-            Button3.Size = New Size(95, 40)
+            Button3.Size = New Size(95, 35)
             Button3.TabIndex = 2
             Button3.Text = txt_No
             Button3.UseVisualStyleBackColor = True
@@ -324,6 +324,8 @@ Public Class myMsgBox
         Friend WithEvents Button3 As Button
 
         Friend txtMsg As TextBox
+        Friend txtTitle As TextBox
+
         Friend lblMsg As Label
 
         Friend WithEvents checkBx As CheckBox
@@ -579,6 +581,8 @@ Public Class myMsgBox
             Me.BackColor = backColor
             Me.ForeColor = foreColor
 
+            ' titleMsg.text = titleText
+            'titleMsg.text = titleText
 
             txtMsg.Text = text
             txtMsg.Font = font

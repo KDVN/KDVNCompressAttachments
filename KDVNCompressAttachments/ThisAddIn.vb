@@ -10,12 +10,19 @@ Imports KDVNMyMsgBox
 
 Public Class ThisAddIn
     Private Const strComproressFile As String = "Attachment.zip"
-    Private Const strConfirmMessage As String = "- This email has attachment(s). Would you like to zip & secure with a random password?" &
-        Chr(13) &
-        "- If you choose YES, another email with the password will be sent automatically !" & Chr(13) &
-        "- If you choose NO, Just send it"
-    Private Const strSubject As String = "Attachment Password for [$CONTENT] "
-    Private Const strBodyEmailPassword As String = "Below is the password for the attachment of the email having subject of [$CONTENT] "
+    Private Const strConfirmMessage As String = "This email containt attachment(s)! Would you like to ZIP & SERCURE those files with a random password?" &
+        ControlChars.NewLine & ControlChars.NewLine &
+        "* If you choose YES, another email with the password will be sent automatically !" & ControlChars.NewLine &
+        "* If you choose NO, Just send it"
+    Private Const strSubject As String = "Attachment(s) Password for [$CONTENT] "
+    Private Const strBodyEmailPassword As String = "To whom it may concern, " & Chr(13) & Chr(13) &
+                                                    "Please use the following password to open the secured attachment(s) of the email having" &
+                                                    "subject of [$CONTENT]" & Chr(13) & Chr(13) &
+                                                    "[$PASSWORD]" & Chr(13) & Chr(13) &
+                                                    "Please note that you have to use a zip program (such as 7-zip, Winzip, Winrar, etc) but" &
+                                                    " not the Windows explorer to open a zip file with a password" & Chr(13) & Chr(13) &
+                                                    "If you need any further support, please contact KINDEN VIETNAM IT Section at (84-24) 3934-2535" & Chr(13) & Chr(13) &
+                                                    "Thank you and best regards,"
     Private Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
 
     'Delete a dir
@@ -168,9 +175,9 @@ Public Class ThisAddIn
 
                 'Dim result As DialogResult
                 'Cai nay
-                Dim waitTime As Integer = 5 'Second
+                Dim waitTime As Integer = 0 'Second
                 Dim result = myMsgBox.Show(strConfirmMessage, kdvnFont,
-                                        "KDVN SEND CONFIRMATION",
+                                        "KDVN's Confirmation",
                                         myMsgBox.CustomButtons.Button3, "&Yes", "&NO, Just send it", "&Cancel",
                                         myMsgBox.DefaultButton.Button2,
                                         myMsgBox.Icon.Question, waitTime)
@@ -187,10 +194,10 @@ Public Class ThisAddIn
                     newMail = Item.Copy()
                     Dim originalSubject = Item.Subject
 
-                    Dim newstrBodyEmailPassword = strBodyEmailPassword.Replace("$CONTENT", originalSubject)
+                    Dim newstrBodyEmailPassword = strBodyEmailPassword.Replace("$CONTENT", originalSubject).Replace("[$PASSWORD]", ZipPassword)
                     Dim newSubject = strSubject.Replace("$CONTENT", originalSubject)
                     newMail.Subject = newSubject
-                    newMail.Body = newstrBodyEmailPassword & Chr(13) & ZipPassword
+                    newMail.Body = newstrBodyEmailPassword
 
                     Item.Body = Item.Body & strMessagePS
                     Item.Attachments.Add(tmpAttsDir & "New\" & strComproressFile)
