@@ -161,18 +161,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_354D163CBFC2453786F4FE5F77D7DD9D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9C98E7A7301DF58B715985117F79C2FA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_86A7C6453157F2E1E88A4D1476785B0C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -222,6 +210,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E2A7F79814E49ACCF6A178FA0B49F015"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_354D163CBFC2453786F4FE5F77D7DD9D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9C98E7A7301DF58B715985117F79C2FA"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -829,15 +829,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:KDVNCompressAttachment"
-        "ProductCode" = "8:{02E5743F-EEFC-42AB-8F0B-BE6FFAF60DA1}"
-        "PackageCode" = "8:{FD413165-8D05-4024-9302-BAF8C73D8540}"
+        "ProductCode" = "8:{B7F59715-0AE6-41D7-8975-00F10CC81779}"
+        "PackageCode" = "8:{DEC6ACE1-236C-4342-A3AD-D4A18A82625F}"
         "UpgradeCode" = "8:{DF51F195-A660-4C71-9D9D-FFED70EB95EE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.5"
+        "ProductVersion" = "8:1.0.8"
         "Manufacturer" = "8:KDVN"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

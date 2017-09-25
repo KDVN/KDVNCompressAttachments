@@ -15,14 +15,12 @@ Public Class ThisAddIn
         " * If you select YES: another email with the password will be sent automatically." & ControlChars.NewLine &
         " * If you select NO: the email will be sent as is."
     Private Const strSubject As String = "Attachment(s) Password for [$CONTENT] "
-    Private Const strBodyEmailPassword As String = "To whom it may concern, " & Chr(13) & Chr(13) &
-                                                    "Please use the following password to open the secured attachment(s) of the email having " &
-                                                    "subject of [$CONTENT]" & Chr(13) & Chr(13) &
-                                                    "[$PASSWORD]" & Chr(13) & Chr(13) &
-                                                    "Please note that you have to use a zip program (such as 7-zip, Winzip, Winrar, etc) but" &
-                                                    " not the Windows explorer to open a zip file with a password" & Chr(13) & Chr(13) &
-                                                    "If you need any further support, please contact KINDEN VIETNAM IT Section at (84-24) 3934-2535" & Chr(13) & Chr(13) &
-                                                    "Thank you and best regards,"
+    Private Const strBodyEmailPassword As String = "Please use the following password to open the secured attachment(s) of the email having " &
+                                                   "subject of <b>[$CONTENT]</b><br><br>" &
+                                                   "[$PASSWORD]<br><br>" &
+                                                   "Please note that you have to use a zip program (such as 7-zip, Winzip, Winrar, etc) but" &
+                                                   " not the Windows explorer to open a zip file with a password."
+
     Private Const strMessagePS As String = Chr(13) & "NOTE: Please check next email for the password to open the Attachment"
 
     'Delete a dir
@@ -62,7 +60,7 @@ Public Class ThisAddIn
             Dim idx As Integer = r.Next(0, s.Length)
             sb.Append(s.Substring(idx, 1))
         Next
-        Return sb.ToString()
+        Return sb.ToString().Trim()
     End Function
 
     ' Copy from https://github.com/icsharpcode/SharpZipLib/wiki/Zip-Samples
@@ -127,17 +125,6 @@ Public Class ThisAddIn
             CompressFolder(folder, zipStream, folderOffset)
         Next
     End Sub
-    'Private Sub CreateZipFileTemp(ByVal sourcePath As String, ByVal destFilename As String, ByVal zipPassword As String)
-    '    'Config
-    '    Dim SevenZipCompressor As New SevenZipCompressor()
-    '    SevenZipCompressor.CompressionLevel = CompressionLevel.Normal
-    '    SevenZipCompressor.CompressionMethod = CompressionMethod.Deflate
-    '    SevenZipCompressor.ArchiveFormat = OutArchiveFormat.Zip
-    '    SevenZipCompressor.ZipEncryptionMethod = ZipEncryptionMethod.Aes256
-
-
-    '    SevenZipCompressor.CompressDirectory(sourcePath, destFilename, zipPassword)
-    'End Sub
 
     Private Sub moveAttach(ByRef Item As Outlook.MailItem, strPath As String)
         Dim sFile As String
@@ -179,14 +166,15 @@ Public Class ThisAddIn
                 Dim result = myMsgBox.Show(strConfirmMessage, kdvnFont,
                                         "KDVN's Confirmation",
                                         myMsgBox.CustomButtons.Button3, "&Yes", "&NO, Just send it", "&Cancel",
-                                        myMsgBox.DefaultButton.Button2,
+                                        myMsgBox.DefaultButton.Button1,
                                         myMsgBox.Icon.Question, waitTime)
                 If result = 3 Then
                     Cancel = True
                     Exit Sub
                 ElseIf result = 1 Then
                     Dim tmpAttsDir = makeTempDir()
-                    Dim ZipPassword = RandomString(10)
+                    Dim ZipPassword As String = RandomString(10).Replace(" ", "")
+
                     'Extract files to temp folder
                     moveAttach(Item, tmpAttsDir & "Old\")
                     CreateZipFile(tmpAttsDir & "Old", tmpAttsDir & "New\" & strComproressFile, ZipPassword)
@@ -194,11 +182,12 @@ Public Class ThisAddIn
                     newMail = Item.Copy()
                     Dim originalSubject = Item.Subject
 
-                    Dim newstrBodyEmailPassword = strBodyEmailPassword.Replace("$CONTENT", originalSubject).Replace("[$PASSWORD]", ZipPassword)
+
+                    Dim newstrBodyEmailPassword = strBodyEmailPassword.Replace("$CONTENT", originalSubject).Replace("[$PASSWORD]", "<b>" & ZipPassword & "</b>")
                     Dim newSubject = strSubject.Replace("$CONTENT", originalSubject)
                     newMail.Subject = newSubject
-                    newMail.Body = newstrBodyEmailPassword
-
+                    'newMail.Body = newstrBodyEmailPassword
+                    newMail.HTMLBody = newstrBodyEmailPassword
                     Item.Body = Item.Body & strMessagePS
                     Item.Attachments.Add(tmpAttsDir & "New\" & strComproressFile)
                     Item.Save()
