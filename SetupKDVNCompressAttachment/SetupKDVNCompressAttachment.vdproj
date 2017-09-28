@@ -328,6 +328,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_803C491AAEDC46679F22B5BED3E68972"
+            {
+            "Name" = "8:Primary output from ServiceInstaller (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_354D163CBFC2453786F4FE5F77D7DD9D"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_4C00A523_F7D2_4921_8B3C_98210D8DE24E"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_F83E584647454E8FAA5F1249077656E9"
             {
             "Name" = "8:Primary output from ServiceInstaller (Active)"
@@ -829,15 +843,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:KDVNCompressAttachment"
-        "ProductCode" = "8:{B7F59715-0AE6-41D7-8975-00F10CC81779}"
-        "PackageCode" = "8:{DEC6ACE1-236C-4342-A3AD-D4A18A82625F}"
+        "ProductCode" = "8:{74B5865D-5173-4ABA-9468-06AE133E857D}"
+        "PackageCode" = "8:{EF9B0D27-D856-4ACF-8606-0A6D75E1E805}"
         "UpgradeCode" = "8:{DF51F195-A660-4C71-9D9D-FFED70EB95EE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.8"
+        "ProductVersion" = "8:1.0.10"
         "Manufacturer" = "8:KDVN"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
